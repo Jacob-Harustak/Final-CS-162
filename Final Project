@@ -1,0 +1,625 @@
+"""
+Created on Sat Dec  5 12:34:16 2020
+
+@author: Jacob Harustak
+"""
+#bank class
+# These import all the classes and methods to this class, the main class.
+from account import Account
+from checking import Checking
+from savings import Savings
+
+
+# This initializes both classes. The account class inst here because all the methods in account are inherited by checking and savings.
+savings = Savings()
+checking = Checking()
+
+
+
+
+# The menus for all the options. There assined to a variable so i dont have to write it every time or copy and paste it(it wouldn't look as clean.)
+account_menu = '\nAccount Menu\n(s) savings accounts\n(c) checking accounts\n(e) end program'
+savings_menu = '\nSavings Menu\n(l) Sort savings by last name\n(a) Sort savings by amount in accounts\n(p) Plot savings accounts\n(n) Search by name\n(m) Search by money in account\n(t) Taking money from account\n(i) Add money to account\n(e) Exit back to account menu'
+checking_menu = '\nCheckings Menu\n(l) Sort checking by last name\n(a) Sort checking by amount in acount\n(p) Plot checking accounts\n(n) Search by name\n(m) Search by money in account\n(t) Taking money from account\n(i) Add money to account\n(e) Exit back to account menu'
+
+done = 'true' # keeps the while loop going
+
+
+
+while done != 'false':
+    print(account_menu) 
+    account_menu_option = input('\nEnter menu option: ') # The user inputs an option
+    if account_menu_option == 's':
+        savings_menu_option = '' # The varible needs to be intiated before it can be used in the while loop.
+        
+        while savings_menu_option != 'e':
+            print(savings_menu)
+            savings_menu_option = input('\nEnter savings menu option: ') # The user inputs an option for the savings menu.
+            
+            if savings_menu_option == 'l': # this sorts the savings file alphbeticly by name
+                print()
+                info = savings.sort_savings_by_name() # Calls the method from savings and it inherits the sorting method it self from the account class.
+                for i in range(len(info)): # This prints out the information
+                    print(info[i][0], end='  -->  ') 
+                    print('$' + info[i][1])
+            
+            elif savings_menu_option == 'a': # This sorts the savings by the amount of money it the acount from most to least.
+                
+                info = savings.sort_savings_by_amount() #Calls method from savings and it inherits the sorting method it self from the account class.
+                for i in range(len(info)): # This prints out the information
+                    print(info[i][0], end='  -->  ')
+                    print('$' + str(info[i][1]))
+                    
+            elif savings_menu_option == 'p': # This plots the current information in the savings file
+                
+                savings.plot_current_savings() # Calls the plot savings method and uses a ploting method inherided from savigns account.
+                
+                
+            elif savings_menu_option == 'n': # This searches for information by last and first name.
+                
+                try:
+                    
+                    search_term = input('Enter name last name then first name: ') #enter last name and then first name.
+                    info = savings.savings_liner_search(0, search_term) #searching method is called
+                    print(info[0], end='  -->  ') # print info
+                    print('$' + info[1])
+                except TypeError:# if the name wasn't in the data base(file) it will print the statement.
+                    print('Name not in data base.')
+                
+                
+            elif savings_menu_option == 'm': #This searches for information by the amount of money in the savings account
+                try:
+                    
+                    search_term = input('Enter the exact amount of money in the account: ') # enter amount of money
+                    info = savings.savings_liner_search(1, search_term) #calls method
+                    print('$' + str(info[1]), end='  -->  ')#print info
+                    print(info[0])
+                except TypeError: # error statment
+                    print('That amount is not in the data base.')
+                
+                
+            elif savings_menu_option == 't': # withdraw money a specific account.
+                
+                try:
+                    name = input('Last name and first name of account: ') # name of the account you wish to withdraw money from
+                    amount = float(input('Amount of money you wish to withdraw: $')) # the amount you wish to take
+                    info = savings.withdraw_money_from_savings_account(name, amount) # calling the method
+                    print(info[0], end='  -->  ') # printing the new balence for the account
+                    print('$' + info[1])
+                except TypeError:
+                    print('\nName not in data base.') # if the name wasn't in the file, it will print the statment.
+                except ValueError:
+                    print('Please input numbers for the amount, not letters')
+                    
+                    
+            elif savings_menu_option == 'i': # add money to the account
+                
+                try:
+                    name = input('Last name and first name of account: ') # name of the account you wish to add to
+                    amount = float(input('Amount of money you wish to add: $')) # the amount of money you wish to add
+                    info = savings.add_money_to_savings_account(name, amount) # calls the method
+                    print(info[0], end='  -->  ')# prints into
+                    print('$' + info[1])
+                except TypeError:
+                    print('\nName not in data base.') # this will print if the name isnt in the data base
+                except ValueError:
+                    print('Please input numbers for the amount, not letters')
+                    
+                    
+            elif savings_menu_option == 'e': # this does nothing other than pass to end the program
+                pass
+            # this is checking to see if the input is not in the menu, if its not, the statement will print
+            elif savings_menu_option != 'l' or savings_menu_option != 'a' or savings_menu_option != 'p' or savings_menu_option != 'n' or savings_menu_option != 'm' or savings_menu_option != 't' or savings_menu_option != 'i' or savings_menu_option != 'e':
+                print('Invalid menu option, please choose an option from the menu')
+                
+                
+        # Everything is alomst exactly the same in checking as it is in savings. 
+    elif account_menu_option == 'c':
+        checking_menu_option = ''
+        
+        while checking_menu_option != 'e':
+            print(checking_menu)
+            checking_menu_option = input('Enter checking menu option: ')
+            
+            if checking_menu_option == 'l':
+                print()
+                info = checking.sort_checking_by_name()
+                for i in range(len(info)):
+                    print(info[i][0], end='  -->  ')
+                    print('$' + info[i][1])
+            
+            elif checking_menu_option == 'a':
+                
+                info = checking.sort_checking_by_amount()
+                for i in range(len(info)):
+                    print(info[i][0], end='  -->  ')
+                    print('$' + str(info[i][1]))
+                    
+            elif checking_menu_option == 'p':
+                
+                checking.plot_current_checking()
+                
+                
+            elif checking_menu_option == 'n':
+                try:
+                    
+                    search_term = input('Enter name last name then first name: ')
+                    info = checking.checking_liner_search(0, search_term)
+                    print(info[0], end='  -->  ')
+                    print('$' + info[1])
+                except:
+                    print('Name not in data base.')
+                
+            elif checking_menu_option == 'm':
+                try:
+                    
+                    search_term = input('Enter the exact amount of money in the account: ')
+                    info = checking.checking_liner_search(1, search_term)
+                    print('$' + info[1], end='  -->  ')
+                    print(info[0])
+                except:
+                    print('That amount is not in the data base.')
+                
+                
+            elif checking_menu_option == 't':
+                
+                try:
+                    name = input('Last name and first name of checking account: ')
+                    amount = float(input('Amount of money you wish to withdraw from checking: $'))
+                    info = checking.withdraw_money_from_checking_account(name, amount)
+                    print(info[0], end='  -->  ')
+                    print('$' + info[1])
+                except TypeError:
+                    print('\nName not in data base.')
+                except ValueError:
+                    print('Please input numbers for the amount, not letters')
+                    
+            elif checking_menu_option == 'i':
+                
+                try:
+                    name = input('Last name and first name of checking account: ')
+                    amount = float(input('Amount of money you wish to add to checking: $'))
+                    info = checking.add_money_to_checking_account(name, amount)
+                    print(info[0], end='  -->  ')
+                    print('$' + info[1])
+                except TypeError:
+                    print('\nName not in data base.')
+                except ValueError:
+                    print('Please input numbers for the amount, not letters')
+                
+            elif checking_menu_option == 'e':
+                pass
+            
+            elif checking_menu_option != 'l' or checking_menu_option != 'a' or checking_menu_option != 'p' or savings_menu_option != 'n' or savings_menu_option != 'm' or savings_menu_option != 't' or savings_menu_option != 'i' or savings_menu_option != 'e':
+                print('Invalid menu option, please choose an option from the menu')
+    
+    
+    elif account_menu_option == 'e': # this ends the program(sets done to false)
+        done = 'false'
+        
+    elif account_menu_option != 's' or account_menu_option != 'c' or account_menu_option != 'e': # checks for invalid menu options.
+        print('Invalid menu option, please choose an option from the menu')
+        
+        
+#------------------------------------------------------------------    account     
+        
+"""
+Created on Sat Dec  5 12:34:32 2020
+
+@author: Jacob Harustak
+"""
+import matplotlib.pyplot as plt
+import csv
+
+class Account:
+    
+    
+    
+    
+    
+    def _ploting_file(self, names_list, amount_list): # this method can be called from both savings and checking
+        fig = plt.figure(figsize=(20,5))   # this configures the size of the bar graph
+        axes = fig.add_axes([0.1,0.1,0.8,0.8]) # this also configures the axes in the graph
+        
+        plt.bar(names_list, amount_list, color='c', align='center') # make the graph
+        
+        plt.show() 
+        
+        
+        
+    def _quickSort(self, numbers, low_index, high_index, partition_num): # this is the sorting method for sorting however you wish(name or amount in this case)(works for both savings and checking)
+        
+        
+        if len(numbers) == 1: # if the length of list sorting is one, it is already sorted
+            return numbers
+        if low_index < high_index: # this will always keep happening until the list is sorted.
+            low_end_index = self._partition(numbers, low_index, high_index, partition_num) # calls the partition method for sorting
+
+                
+            self._quickSort(numbers, low_index, low_end_index - 1, partition_num) # recalls quick sort two more times.
+            self._quickSort(numbers, low_end_index + 1, high_index, partition_num)
+            
+        return numbers # returns the sorted list
+ 
+ 
+
+        
+        
+    def _partition(self, numbers, low_index, high_index, partition_num):
+        i = (low_index - 1)         # index of smaller element
+        pivot = numbers[high_index][partition_num]     # pivot
+ 
+        for j in range(low_index, high_index):
+ 
+        # If current element is smaller than or
+        # equal to pivot
+            if numbers[j][partition_num] <= pivot:
+ 
+            # increment index of smaller element
+                i = i+1
+                numbers[i], numbers[j] = numbers[j], numbers[i]
+ 
+        numbers[i+1], numbers[high_index] = numbers[high_index], numbers[i+1]
+        return (i+1)
+        
+        
+        
+        
+#--------------------------------------------------------------------------- savings
+
+
+"""
+Created on Sat Dec  5 12:34:47 2020
+
+@author: Jacob Harustak
+"""
+
+
+import matplotlib.pyplot as plt
+import csv
+from account import Account
+
+class Savings(Account): # this class inherits every method from the account class
+    
+    
+    def __init__(self):
+        Account.__init__(self) # this initalises the account class so everything from account can be used in savings
+        
+        
+        
+    def plot_current_savings(self): # this plots the savings file
+        
+        with open('savings.txt', 'r') as savings_file: # opens file
+            savings_data = [row for row in csv.reader(savings_file)]  
+        
+        savings_names_list = []
+        savings_amount_list = [] # makes lists
+        for i in range(len(savings_data)): 
+            savings_amount_list.append(float(savings_data[i][1])) # appends all names to savings name list
+        for i in range(len(savings_data)):
+            savings_names_list.append(savings_data[i][0]) # appends all amounts to savings amount list
+        
+        self._ploting_file(savings_names_list, savings_amount_list) # plots what was put into the lists.
+        
+        
+
+
+
+    def sort_savings_by_amount(self): # Sorts the savings file by amount
+         
+        with open('savings.txt', 'r') as savings_file:
+            savings_data = [row for row in csv.reader(savings_file)] # put the file into a list of lists
+        
+        savings_dict = dict() # make a dictinary
+        
+        for i in range(len(savings_data)):
+            savings_dict[savings_data[i][0]] = float(savings_data[i][1]) # makes the names the keys in the dict, and converts all the numbers into floats(they were strings) as they are assined to the dict
+            
+        savings_dict_list = list(savings_dict.items()) # makes all the items in the dict into a list
+        #sets variables for sorting
+        partition_num = 1
+        high_index = len(savings_dict_list)
+        low_index = 0
+        sort_savings_dict = self._quickSort(savings_dict_list, low_index, high_index - 1, partition_num) # call the sorting fuction
+        
+        return sort_savings_dict # returns the sorted list
+    
+    
+    
+    def sort_savings_by_name(self): 
+        with open('savings.txt', 'r') as savings_file:
+            savings_data = [row for row in csv.reader(savings_file)]
+        
+        
+        new_list = []
+        
+        
+        for i in range(len(savings_data)):
+            new_list.append(savings_data[i]) # puts all the names into a list
+                
+        partition_num = 0
+        low_index = 0
+        high_index = len(new_list)
+        return_list = self._quickSort(new_list, low_index, high_index - 1, partition_num) # sorts that list of names.
+        return return_list
+    
+    
+    
+    def savings_liner_search(self, column_index, search_index):
+        with open('savings.txt', 'r') as savings_file:
+            savings_data = [row for row in csv.reader(savings_file)]
+        
+        
+        for i in range(len(savings_data)):
+            
+            if search_index == savings_data[i][column_index]: # searches all the names or amounts for whatever was input from bank.
+                    return savings_data[i] # if found, it is returned. if not, nothing is returned generating an Error handled in the bank file.
+            
+                
+
+    def withdraw_money_from_savings_account(self, name, amount): 
+        with open('savings.txt', 'r') as savings_file:
+            savings_data = [row for row in csv.reader(savings_file)]
+            
+        
+            
+        for i in range(len(savings_data)):
+            if name == savings_data[i][0]: #this searches for the name in the savings account
+                data = savings_data[i] # if found the info is saved in to this variable to be returned just in case the amount withdrawn is more in the account and it wont generate a name not found error
+                if amount <= 0: # this checks for negative inputs, this error message will only activate if the name was found.
+                    print('no negative numbers')
+                    return data
+                    
+                elif float(savings_data[i][1]) - amount >= 0: # checks to see if that much money is in their savings
+                    savings_data[i][1] = float(savings_data[i][1]) - amount # changes that amount of money in the list
+                    savings_data[i][1] = round(savings_data[i][1], 2) # rounds that number
+                    savings_data[i][1] = str(savings_data[i][1]) # changes it to a string to be rewriten into the file
+                else:
+                    print('You dont have enough money in the acount') #if the amount take was more than the amount in the savings account, this is printed
+                    return data
+        
+        
+                
+        with open('savings.txt', 'w') as write_savings_file: # opens the savings file to be rewritten with new information
+            for i in range(len(savings_data)):
+                
+                write_savings_file.writelines(savings_data[i][0] + ',') # this writes the name with a ,
+                write_savings_file.writelines(savings_data[i][1] + '\n') # this writes the amounts with a \n (including the changed amount)
+            
+        for i in range(len(savings_data)):
+            
+            if name == savings_data[i][0]: # this will return the new amount for that savings account, this will not activate if the amount taken was too much.
+                    return savings_data[i]
+
+
+
+    def add_money_to_savings_account(self, name, amount): # this does the same thing as the withdraw method, except your just adding money, not taking it. 
+        with open('savings.txt', 'r') as savings_file:
+            savings_data = [row for row in csv.reader(savings_file)]
+            
+        for i in range(len(savings_data)):
+            if name == savings_data[i][0]:
+                data = savings_data[i]
+                if amount <= 0:
+                    print('no negative numbers')
+                    return data
+                
+                if amount > 0:
+                    savings_data[i][1] = float(savings_data[i][1]) + amount
+                    savings_data[i][1] = round(savings_data[i][1], 2)
+                    savings_data[i][1] = str(savings_data[i][1])
+                else:
+                    print('You dont have enough money in the acount')
+                    return data
+        
+        
+                
+        with open('savings.txt', 'w') as write_savings_file:
+            for i in range(len(savings_data)):
+                
+                write_savings_file.writelines(savings_data[i][0] + ',')
+                write_savings_file.writelines(savings_data[i][1] + '\n')
+            
+        for i in range(len(savings_data)):
+            
+            if name == savings_data[i][0]:
+                    return savings_data[i]
+
+
+        
+#------------------------------------------------------ checking
+
+
+"""
+Created on Sat Dec  5 12:35:02 2020
+
+@author: Jacob Harustak
+"""
+
+import matplotlib.pyplot as plt
+import csv
+from account import Account
+
+class Checking(Account):
+    
+    
+    
+    def __init__(self):
+        Account.__init__(self)
+        
+        
+        
+    def plot_current_checking(self):
+        with open('checking.txt', 'r') as checking_file:
+            
+            checking_data = [row for row in csv.reader(checking_file)]
+        
+        checking_names_list = []
+        checking_amount_list = []
+        for i in range(len(checking_data)):
+            checking_amount_list.append(float(checking_data[i][1]))
+        for i in range(len(checking_data)):
+            checking_names_list.append(checking_data[i][0])
+        
+        
+        self._ploting_file(checking_names_list, checking_amount_list)
+        
+        
+        
+        
+    def sort_checking_by_amount(self):
+        with open('checking.txt', 'r') as checking_file:
+            
+            checking_data = [row for row in csv.reader(checking_file)]
+        
+        
+        checking_dict = dict()
+        
+        for i in range(len(checking_data)):
+            checking_dict[checking_data[i][0]] = float(checking_data[i][1])
+            
+        checking_dict_list = list(checking_dict.items())
+        
+        partition_num = 1
+        high_index = len(checking_dict_list)
+        low_index = 0
+        sort_checking_dict = self._quickSort(checking_dict_list, low_index, high_index - 1, partition_num)
+        
+        return sort_checking_dict
+        
+        
+        
+    def sort_checking_by_name(self):
+        with open('checking.txt', 'r') as checking_file:
+            
+            checking_data = [row for row in csv.reader(checking_file)]
+        
+        
+        new_list = []
+    
+    
+        for i in range(len(checking_data)):
+            new_list.append(checking_data[i])
+                
+        partition_num = 0
+        low_index = 0
+        high_index = len(new_list)
+        return_list = self._quickSort(new_list, low_index, high_index - 1, partition_num)
+        return return_list
+        
+        
+    def checking_liner_search(self, column_index, search_index):
+        with open('checking.txt', 'r') as checking_file:
+            
+            checking_data = [row for row in csv.reader(checking_file)]
+           
+        for i in range(len(checking_data)):
+            if search_index == checking_data[i][column_index]:
+                return checking_data[i]
+            
+            
+    def withdraw_money_from_checking_account(self, name, amount):
+        with open('checking.txt', 'r') as checking_file:
+            checking_data = [row for row in csv.reader(checking_file)]
+            
+        for i in range(len(checking_data)):
+            if name == checking_data[i][0]:
+                data = checking_data[i]
+                if amount <= 0:
+                    print('no negative numbers')
+                    return data
+                
+                if float(checking_data[i][1]) - amount >= 0:
+                    checking_data[i][1] = float(checking_data[i][1]) - amount
+                    checking_data[i][1] = round(checking_data[i][1], 2)
+                    checking_data[i][1] = str(checking_data[i][1])
+                else:
+                    print('You dont have enough money in the acount')
+                    return data
+        
+        
+                
+        with open('checking.txt', 'w') as write_checking_file:
+            for i in range(len(checking_data)):
+                
+                write_checking_file.writelines(checking_data[i][0] + ',')
+                write_checking_file.writelines(checking_data[i][1] + '\n')
+            
+        for i in range(len(checking_data)):
+            
+            if name == checking_data[i][0]:
+                    return checking_data[i]
+
+
+
+    def add_money_to_checking_account(self, name, amount):
+        with open('checking.txt', 'r') as checking_file:
+            checking_data = [row for row in csv.reader(checking_file)]
+            
+        for i in range(len(checking_data)):
+            if name == checking_data[i][0]:
+                data = checking_data[i]
+                if amount <= 0:
+                    print('no negative numbers')
+                    return data
+                if amount > 0:
+                    checking_data[i][1] = float(checking_data[i][1]) + amount
+                    checking_data[i][1] = round(checking_data[i][1], 2)
+                    checking_data[i][1] = str(checking_data[i][1])
+                else:
+                    print('You dont have enough money in the acount')
+                    return data
+        
+        
+                
+        with open('checking.txt', 'w') as write_checking_file:
+            for i in range(len(checking_data)):
+                
+                write_checking_file.writelines(checking_data[i][0] + ',')
+                write_checking_file.writelines(checking_data[i][1] + '\n')
+            
+        for i in range(len(checking_data)):
+            
+            if name == checking_data[i][0]:
+                    return checking_data[i]
+                    
+                    
+                  
+# -----------------------------------------------------------------------------------------savings file
+Harustak Jacob,67934.09
+Pepper Stacy,1287.23
+Looking Ryan,73426.02
+Bloop Trever,23971.34
+Donn Lindsey,2873.09
+Cappa Alfredo,19264.90
+Dunce Jeramy,8723.16
+Dempsy Jack,23981.40
+Brian Matthew,1937.29
+Luck Gavin,12345.67
+Formost Michael,3018.98
+Rampart Geoff,9810.81
+Smith John,4000.01
+Dooley Jacob,1411.41
+
+
+# --------------------------------------------------------------------------------------------checking file
+Harustak Jacob,67934.08
+Pepper Stacy,1287.23
+Looking Ryan,73426.02
+Bloop Trever,23971.34
+Donn Lindsey,2873.09
+Cappa Alfredo,19264.90
+Dunce Jeramy,8723.16
+Dempsy Jack,23981.40
+Brian Matthew,1937.29
+Luck Gavin,12345.67
+Formost Michael,3018.98
+Rampart Geoff,9810.81
+Smith John,4000.01
+Dooley Jacob,1411.41
+
+
+
+
+
+
